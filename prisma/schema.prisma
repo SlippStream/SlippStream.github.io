@@ -20,13 +20,8 @@ model Song {
 }
 
 model Pokemon {
-  id       Int    @id
-  types    Type[]
+  id       Int      @id
+  name     String
+  types    String[]
   playlist Song[]
-}
-
-model Type {
-  name    String    @id
-  url     String
-  pokemon Pokemon[]
 }
