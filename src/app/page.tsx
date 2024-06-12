@@ -1,14 +1,13 @@
-import Image from "next/image";
-import { PrismaClient } from "@prisma/client";
-import { getNumberOfPokemon, getPokemonById, getRandomPokemon, updatePokemonEntries } from "./util/pokemonAPI";
-
-export const prisma = new PrismaClient();
+"use server";
+import 'dotenv/config'
+import { TidalSearch } from "../components/tidalSearch";
+import { prisma } from "./util/prisma";
+import React from "react";
+import { PokemonProfile } from "@/components/homeServer";
+import { getRandomPokemon } from "./util/pokemonAPI";
 
 async function main() {
   await prisma.$connect();
-  //updatePokemonEntries();
-  const pokemon = await getRandomPokemon();
-  console.log(`random pokemon: #${pokemon.id} ${pokemon.name}`);
 }
 
 main()
@@ -22,14 +21,11 @@ main()
   })
 
 export default async function Home() {
-  const pokemon = await getRandomPokemon();
+  const pk = await getRandomPokemon();
   return (
     <main>
-      <Image 
-      src={pokemon.sprites.front_default}
-      width={500}
-      height={500}
-      alt={pokemon.name}/>
+      <PokemonProfile firstPokemon={pk}/>
+      <TidalSearch clientId={process.env.TIDAL_CLIENT_ID as string} clientSecret={ process.env.TIDAL_CLIENT_SECRET as string}/>
     </main>
   );
 }

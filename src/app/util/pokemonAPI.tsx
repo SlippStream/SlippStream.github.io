@@ -1,10 +1,11 @@
+"use server";
 import * as http from "https";
-import { prisma } from "../page";
+import { prisma } from "./prisma";
 import { Pokemon } from "@prisma/client";
 
 const api_endpoint = "https://pokeapi.co/api/v2/";
 
-interface RawPokemon {
+export interface RawPokemon {
     id: number;
     name: string;
     types: [
@@ -20,6 +21,8 @@ interface RawPokemon {
         front_default: string;
     };
 }
+
+
 
 export const getPokemonById = async (id: number): Promise<RawPokemon> => {
     return new Promise((resolve, reject) => {
@@ -52,9 +55,15 @@ export const getNumberOfPokemon = async(): Promise<number> => {
         })
     });
 }
+export const getNumberOfPokemonInDatabase = async(): Promise<number> => {
+    await prisma.$connect();
+    const c = prisma.pokemon.count()
+    await prisma.$disconnect();
+    return c;
+}
 
 export const getRandomPokemon = async(): Promise<RawPokemon> => {
-    const count = await getNumberOfPokemon();
+    const count = await getNumberOfPokemonInDatabase();
   return await getPokemonById(Math.ceil(Math.random() * count));
   
 }
