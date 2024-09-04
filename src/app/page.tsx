@@ -1,11 +1,10 @@
 "use server";
 import 'dotenv/config'
-import { TidalSearch } from "../components/tidalSearch";
-import { prisma } from "./util/prisma";
+import { TidalSearch } from "@/components/tidalSearch.tsx";
+import { prisma } from "@/util/prisma.ts";
 import React from "react";
-import { PokemonProfile } from "@/components/homeServer";
-import { getRandomPokemon } from "./util/pokemonAPI";
-
+import { PokemonProfile } from "@/components/homeServer.tsx";
+import { getRandomPokemon } from "@/util/pokemonAPI.tsx";
 async function main() {
   await prisma.$connect();
 }
@@ -21,10 +20,9 @@ main()
   })
 
 export default async function Home() {
-  const pk = await getRandomPokemon();
   return (
     <main>
-      <PokemonProfile firstPokemon={pk}/>
+      <PokemonProfile firstPokemonID={1}/>
       <TidalSearch clientId={process.env.TIDAL_CLIENT_ID as string} clientSecret={ process.env.TIDAL_CLIENT_SECRET as string}/>
     </main>
   );

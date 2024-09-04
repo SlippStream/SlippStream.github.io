@@ -1,7 +1,6 @@
 "use client";
-import { TidalAPI, tidal } from "@/app/util/tidalAPI";
 import { useEffect } from "react";
-import { TidalState } from "./tidalSearch";
+import { TidalState } from "./tidalSearch.tsx";
 
 
 export function TidalList({state}:{ state: TidalState }) {    

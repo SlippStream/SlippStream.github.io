@@ -1,36 +1,38 @@
 "use client";
-import React from "react";
-import Image from "next/image";
-import { RawPokemon, getPokemonById, getRandomPokemon } from "@/app/util/pokemonAPI";
+const Image = require("next/image.js");
+import { useState } from "react";
+import { PokemonImage, RawPokemon, getPokemonById, getRandomPokemon } from "@/util/pokemonAPI.tsx";
 import { Pokemon } from "@prisma/client";
 
-let currentPokemon: Pokemon = {
+let currentPokemon: RawPokemon = {
     id: 0,
-    name: "NONE",
-    types: []
+    name: "",
+    sprites: {
+        front_default: ""
+    },
+    types: [
+        {
+            slot: 0,
+            type: {
+                name: "",
+                url: ""
+            }
+        }
+    ]
 };
 
-export function PokemonProfile({ firstPokemon }: {firstPokemon: RawPokemon}) {
-    const [pokemon, setPokemon] = React.useState(firstPokemon);
-    currentPokemon = {
-        id: pokemon.id,
-        name: pokemon.name,
-        types: pokemon.types.flatMap((v) => v.type.name)
-    }
+export function PokemonProfile({ firstPokemonID }: {firstPokemonID: number}) {
+    const [pokemonId, setPokemonId] = useState(firstPokemonID);
     return (
         <main>
-            <Image 
-            src={pokemon.sprites.front_default}
-            width={250}
-            height={250}
-            alt={pokemon.name}/>
-            <h1 className="w-3/6 place-self-center">#{pokemon.id} - {pokemon.name}</h1>
-            <button onClick={() => getRandomPokemon().then((pk) => setPokemon(pk))}>Get Random Pokemon</button>
+            <PokemonImage
+                id={pokemonId}/>
+            <button onClick={() => getRandomPokemon().then((pk) => setPokemonId(pk.id))}>Get Random Pokemon</button>
             <br></br>
             <form onSubmit={(e) => {
                 e.preventDefault();
                 getPokemonById(e.currentTarget.id_enter.value as number)
-                .then((pk) => setPokemon(pk));
+                .then((pk) => setPokemonId(pk.id));
             }}>
                 <input name="id_enter" type="number" defaultValue="1"/>
             </form>

@@ -2,7 +2,7 @@
 CREATE TABLE "Song" (
     "tidalId" INTEGER NOT NULL,
     "tidalUrl" TEXT NOT NULL,
-
+    
     CONSTRAINT "Song_pkey" PRIMARY KEY ("tidalId")
 );
 
