@@ -1,9 +1,8 @@
 "use client";
 import 'dotenv/config'
-import { TidalTrack, TidalAPI, SearchComponentInternal } from '@/util/tidalAPI.tsx';
-import tidal from '@/util/tidalAPI.tsx';
+import { TidalTrack, default as SearchComponentInternal, getSearchResults } from '@/util/tidalAPI.tsx';
 import { TidalList } from './tidalList.tsx';
-import currentPokemon from './homeServer.tsx';
+import { currentPokemon } from './homeServer.tsx';
 import { useFormState } from 'react-dom';
 import { useEffect } from 'react';
 
@@ -17,33 +16,29 @@ export function FormSubmit(previousState: TidalState, formData: FormData): Promi
     return new Promise<TidalState>((resolve, reject): void => {
         const query = formData.get("query");
         if (query === null || query?.valueOf() as string === "") return ;
-        if (!tidal) {
-            reject("FormSubmit: error: TIDAL api not initialized!");
-        }
 
         useEffect(() => {
             (async() => {
-                resolve(await asyncQuery());
+                let q: TidalTrack[] = [];
+                try {
+                    console.log(`FormSubmit: info: form submitted with query ${query?.valueOf() as string}`);
+                    const res = ""//await getSearchResults(query?.valueOf() as string);
+                    console.log(`FormSubmit: info: search returned ${res}.`);
+                    //if (res) q = res as TidalTrack[];
+                } catch(e) {
+                    console.error(`FormSubmit: err: ${e}`);
+                }
+
+                resolve({
+                    query: previousState.query,
+                    list: q
+                });
             })
         }, []);
-
-        const asyncQuery = async(): Promise<TidalState> => {
-            console.log(`FormSubmit: info: form submitted with query ${query?.valueOf() as string}`);
-            let q: TidalTrack[] = [];
-
-            const res = await tidal?.getSearchResults(query?.valueOf() as string);
-            console.log(`FormSubmit: info: search returned ${res}.`);
-            if (res) q = res as TidalTrack[];
-
-            return {
-                query: previousState.query,
-                list: q
-            };
-        }
     });
 }
  
-export function TidalSearch({ clientId, clientSecret }: {clientId: string, clientSecret: string}) { 
+export default function TidalSearch({ clientId, clientSecret }: {clientId: string, clientSecret: string}) { 
     const [state, formAction] = useFormState<TidalState, FormData>(FormSubmit, {
         query: "",
         list: []

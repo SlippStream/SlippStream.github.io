@@ -1,10 +1,8 @@
 "use client";
-const Image = require("next/image.js");
-import { useState } from "react";
-import { PokemonImage, RawPokemon, getPokemonById, getRandomPokemon } from "@/util/pokemonAPI.tsx";
-import { Pokemon } from "@prisma/client";
+import React, { useState } from "react";
+import { default as PokemonServerComponent, RawPokemon, getPokemonById, getRandomPokemon } from "@/util/pokemonAPI.tsx";
 
-let currentPokemon: RawPokemon = {
+export let currentPokemon: RawPokemon = {
     id: 0,
     name: "",
     sprites: {
@@ -25,8 +23,7 @@ export function PokemonProfile({ firstPokemonID }: {firstPokemonID: number}) {
     const [pokemonId, setPokemonId] = useState(firstPokemonID);
     return (
         <main>
-            <PokemonImage
-                id={pokemonId}/>
+            <PokemonServerComponent id={pokemonId}/>
             <button onClick={() => getRandomPokemon().then((pk) => setPokemonId(pk.id))}>Get Random Pokemon</button>
             <br></br>
             <form onSubmit={(e) => {
@@ -39,5 +36,3 @@ export function PokemonProfile({ firstPokemonID }: {firstPokemonID: number}) {
         </main>
     )
 }
-
-export default currentPokemon;

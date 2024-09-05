@@ -1,11 +1,13 @@
 "use server";
 import * as http from "https";
 import { prisma } from "@/util/prisma.ts";
-import currentPokemon from "@/components/homeServer.tsx";
-const Image = require("next/image.js");
+import React from "react";
+import PokemonImage from "@/components/pokemonImage.tsx";
 
+const Image = require("next/image.js");
 const api_endpoint = "https://pokeapi.co/api/v2/";
 
+let currentPk : RawPokemon;
 export interface RawPokemon {
     id: number;
     name: string;
@@ -23,16 +25,27 @@ export interface RawPokemon {
     };
 }
 
-export const PokemonImage = async({...props}: {id: number}) => {
-    let pk = await(getPokemonById(props.id));
-    return(
+const BlankPokemon: RawPokemon = {
+    id: 0,
+    name: "",
+    types: [
+        {
+            slot: 0,
+            type: {
+                name: "",
+                url: ""
+            }
+        }
+    ],
+    sprites: {
+        front_default: ""
+    }
+}
+
+export default async function PokemonServerComponent({...props}: {id: number}) {
+    return (
         <main>
-            <Image 
-                src={pk.sprites.front_default}
-                width={250}
-                height={250}
-                alt={pk.name}/>
-            <h1 className="w-3/6 place-self-center">#{pk.id} - {pk.name}</h1>
+            <PokemonImage id={props.id}></PokemonImage>
         </main>
     )
 }

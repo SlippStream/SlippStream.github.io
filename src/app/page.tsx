@@ -1,10 +1,10 @@
 "use server";
 import 'dotenv/config'
-import { TidalSearch } from "@/components/tidalSearch.tsx";
+import { default as TidalSearch } from "@/components/tidalSearch.tsx";
 import { prisma } from "@/util/prisma.ts";
 import React from "react";
 import { PokemonProfile } from "@/components/homeServer.tsx";
-import { getRandomPokemon } from "@/util/pokemonAPI.tsx";
+
 async function main() {
   await prisma.$connect();
 }
